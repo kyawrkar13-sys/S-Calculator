@@ -1,2 +1,2 @@
-# S-Calculator
-easy place solar
+# ENGR-Rkar
+S-Calculator
