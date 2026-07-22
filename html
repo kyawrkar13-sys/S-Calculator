@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SOLAR TOOL</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:#f2f5f7;
+    padding:20px;
+}
+.box{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    max-width:700px;
+    margin:auto;
+    box-shadow:0 0 10px #aaa;
+}
+h1{
+    text-align:center;
+    color:#ff9800;
+}
+input,select,button{
+    width:100%;
+    padding:10px;
+    margin:6px 0;
+    border-radius:6px;
+    border:1px solid #aaa;
+}
+button{
+    background:#ff9800;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+.result{
+    background:#222;
+    color:#00ff99;
+    padding:15px;
+    margin-top:15px;
+    border-radius:8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>☀️ SOLAR TOOL</h1>
+
+<label>Roof / Area (m²)</label>
+<input id="area" type="number" placeholder="ဥပမာ 100">
+
+<label>Solar Panel Watt</label>
+<select id="panel">
+<option value="615">615W</option>
+<option value="650">650W</option>
+<option value="700">700W</option>
+<option value="720">720W</option>
+<option value="750">750W</option>
+</select>
+
+
+<label>Panel Length (m)</label>
+<input id="length" type="number" value="2.38">
+
+<label>Panel Width (m)</label>
+<input id="width" type="number" value="1.30">
+
+
+<label>Available Area %</label>
+<input id="use" type="number" value="80">
+
+
+<button onclick="calculate()">CALCULATE</button>
+
+
+<div class="result" id="result">
+Result Here...
+</div>
+
+</div>
+
+
+<script>
+
+function calculate(){
+
+let area =
+Number(document.getElementById("area").value);
+
+let watt =
+Number(document.getElementById("panel").value);
+
+let length =
+Number(document.getElementById("length").value);
+
+let width =
+Number(document.getElementById("width").value);
+
+let use =
+Number(document.getElementById("use").value);
+
+
+let panelArea = length * width;
+
+let usableArea = area * use /100;
+
+let qty = Math.floor(usableArea / panelArea);
+
+let totalWatt = qty * watt;
+
+let kw = totalWatt /1000;
+
+
+document.getElementById("result").innerHTML =
+
+"Panel Qty : "+qty+" pcs<br>"+
+"Panel Watt : "+watt+" W<br>"+
+"Solar Size : "+kw.toFixed(2)+" kW<br>"+
+"Area Used : "+(qty*panelArea).toFixed(2)+" m²";
+
+
+}
+
+</script>
+
+</body>
+</html>
+
+<!-- SOLAR TOOL V7 PART 3 -->
+
+<h2>🔋 Inverter Selection</h2>
+
+<label>Inverter Brand</label>
+<select id="brand">
+<option>Sigen</option>
+<option>Deye</option>
+<option>Growatt</option>
+<option>Sungrow</option>
+<option>Huawei</option>
+</select>
+
+<label>Solar Size (kW)</label>
+<input id="solarKW" type="number" placeholder="10">
+
+<button onclick="inverterSelect()">Select Inverter</button>
+
+<div id="invResult" class="result"></div>
+
+
+<h2>📊 Single Line Diagram (SLD)</h2>
+
+<button onclick="makeSLD()">Generate SLD</button>
+
+<div id="sld" class="result"></div>
+
+
+<h2>📄 Export Report</h2>
+
+<button onclick="printReport()">PRINT / SAVE PDF</button>
+
+
+<script>
+
+
+function inverterSelect(){
+
+let kw =
+Number(document.getElementById("solarKW").value);
+
+let brand =
+document.getElementById("brand").value;
+
+
+let size = Math.ceil(kw);
+
+
+document.getElementById("invResult").innerHTML =
+
+"Brand : "+brand+"<br>"+
+"Recommended Inverter : "+
+size+" kW<br><br>"+
+"DC Coupled System Recommended";
+
+
+}
+
+☀️ SOLAR PV ARRAY
+<br>
+⬇
+<br>
+DC ISOLATOR
+<br>
+⬇
+<br>
+MPPT INPUT
+<br>
+⬇
+<br>
+HYBRID INVERTER
+<br>
+⬇
+<br>
+AC BREAKER
+<br>
+⬇
+<br>
+LOAD / GRID
+<br>
+<br>
+🔋 BATTERY
+<br>
+⬆
+<br>
+BATTERY PORT
+`;
+
+}
+
+
+
+function printReport(){
+
+window.print();
+
+}
+
+
+</script>
+[ 21 July 2026 23:09 ] ⁨Rkar Kyaw⁩: <h2>🔋 Battery kWh Auto (Universal Voltage)</h2>
+
+<label>Load (Watt)</label>
+<input id="batLoad" type="number" placeholder="ဥပမာ 5000">
+
+<label>Backup Time (Hour)</label>
+<input id="backupHour" type="number" value="8">
+
+<label>Battery Voltage (V)</label>
+<input id="batteryVoltage" type="number" value="51.2" placeholder="48 / 51.2 / 96 / 384">
+
+<label>Battery Efficiency (%)</label>
+<input id="efficiency" type="number" value="90">
+
+
+<button onclick="batteryAuto()">CALCULATE</button>
+
+<div id="batteryResult" class="result"></div>
+
+
+<script>
+
+function batteryAuto(){
+
+let load = Number(document.getElementById("batLoad").value);
+let hour = Number(document.getElementById("backupHour").value);
+let voltage = Number(document.getElementById("batteryVoltage").value);
+let eff = Number(document.getElementById("efficiency").value);
+
+
+// Energy kWh
+let energy = (load * hour) / 1000;
+
+
+// Efficiency compensate
+let batteryKwh = energy / (eff/100);
+
+
+// Ah calculation
+let batteryAh = (batteryKwh * 1000) / voltage;
+
+
+document.getElementById("batteryResult").innerHTML =
+
+"Battery Energy : "+
+batteryKwh.toFixed(2)+" kWh<br><br>"+
+
+"Battery Voltage : "+
+voltage+" V<br><br>"+
+
+"Required Battery : "+
+batteryAh.toFixed(1)+" Ah";
+
+}
+
+</script>
